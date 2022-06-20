@@ -54,8 +54,8 @@ public class RentalsController {
 		return this.rentalService.getAll();
 	}
 	
-	/*@GetMapping("getRentalDetails")
+	@GetMapping("getRentalDetails")
 	public DataResult<List<RentalDetails>> getByRentalDetails(){
-		return rentalService.getRentalDetails();
-	}*/
+		return rentalService.callRentalDetails();
+	}
 }

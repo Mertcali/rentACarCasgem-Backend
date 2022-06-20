@@ -20,6 +20,7 @@ import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CarRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CityRepository;
+import com.kodlamaio.rentACar.dataAccess.abstracts.RentalDetailsRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.RentalRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.UserRepository;
 import com.kodlamaio.rentACar.entities.concretes.Car;
@@ -41,6 +42,8 @@ public class RentalManager implements RentalService {
 	UserRepository userRepository;
 	@Autowired
 	ModelMapperService modelMapperService;
+	@Autowired
+	RentalDetailsRepository rentalDetailsRepository;
 	@Autowired
 	FindexService findexService;
 
@@ -122,9 +125,9 @@ public class RentalManager implements RentalService {
 		return state;
 	}
 
-	/*@Override
+	@Override
 	public DataResult<List<RentalDetails>> callRentalDetails() {
-		return new SuccessDataResult<List<RentalDetails>>(rentalRepository.callRentalDetails(),"Data Listelendi");
-	}*/
+		return new SuccessDataResult<List<RentalDetails>>(rentalDetailsRepository.callRentalDetails(),"Data Listelendi");
+	}
 	
 }

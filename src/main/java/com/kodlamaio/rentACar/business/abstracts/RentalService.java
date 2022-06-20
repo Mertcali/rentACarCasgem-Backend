@@ -21,6 +21,6 @@ public interface RentalService {
 	DataResult<Rental> getById(ReadRentalResponse readRentalResponse);
 
 	DataResult<List<Rental>> getAll();
-//	DataResult<List<RentalDetails>> callRentalDetails();
+	DataResult<List<RentalDetails>> callRentalDetails();
 
 }

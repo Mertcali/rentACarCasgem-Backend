@@ -27,22 +27,22 @@ public class RentalDetails {
 	private double dailyPrice;
 	
 	//@Column(name="brand_name")
-	private String brandName;
+	//private String brandName;
 	
 	//@Column(name="color_name")
-	private String colorName;
+	//private String colorName;
 	
 	//@Column(name="first_name")
-	private String firstName;
+	//private String firstName;
 	
 	//@Column(name="last_name")
-	private String lastName;
+	//private String lastName;
 	
 	//@Column(name="plate")
-	private String plate;
+	//private String plate;
 	
 	//@Column(name="kilometer")
-	private Integer kilometer;
+	//private Integer kilometer;
 	
 	//@Column(name="pickup_date")
 	private LocalDate pickupDate;
