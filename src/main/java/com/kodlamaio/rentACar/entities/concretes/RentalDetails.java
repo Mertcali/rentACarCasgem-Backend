@@ -1,5 +1,6 @@
-
 package com.kodlamaio.rentACar.entities.concretes;
+
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,34 +9,37 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "invoices")
-public class Invoice {
+@Table(name="rental_details")
+public class RentalDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 	
-	@Column(name = "invoice_number")
-	private int invoiceNumber;
-	
-	@Column(name = "total_price")
+	@Column(name="total_price")
 	private double totalPrice;
+
+	@ManyToOne
+	@JoinColumn(name = "rental_id")
+	private Rental rental;
 	
 	@ManyToOne
-	@JoinColumn(name = "rental_details_id")
-	private RentalDetails rentalDetails;
+	@JoinColumn(name = "additional_id")
+	private Additional additional;
+	
+	@OneToMany(mappedBy = "rentalDetails")
+	private List<Invoice> invoices;
 	
 }
-

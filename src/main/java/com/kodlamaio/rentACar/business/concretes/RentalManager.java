@@ -27,7 +27,6 @@ import com.kodlamaio.rentACar.entities.concretes.Car;
 import com.kodlamaio.rentACar.entities.concretes.City;
 import com.kodlamaio.rentACar.entities.concretes.Rental;
 import com.kodlamaio.rentACar.entities.concretes.User;
-import com.kodlamaio.rentACar.entities.dtos.RentalDetails;
 
 @Service
 public class RentalManager implements RentalService {
@@ -125,9 +124,9 @@ public class RentalManager implements RentalService {
 		return state;
 	}
 
-	@Override
+	/*@Override
 	public DataResult<List<RentalDetails>> callRentalDetails() {
 		return new SuccessDataResult<List<RentalDetails>>(rentalDetailsRepository.callRentalDetails(),"Data Listelendi");
-	}
+	}*/
 	
 }

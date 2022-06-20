@@ -9,7 +9,6 @@ import com.kodlamaio.rentACar.business.response.rentals.ReadRentalResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.entities.concretes.Rental;
-import com.kodlamaio.rentACar.entities.dtos.RentalDetails;
 
 public interface RentalService {
 	Result add(CreateRentalRequest createRentalRequest);
@@ -21,6 +20,6 @@ public interface RentalService {
 	DataResult<Rental> getById(ReadRentalResponse readRentalResponse);
 
 	DataResult<List<Rental>> getAll();
-	DataResult<List<RentalDetails>> callRentalDetails();
+	//DataResult<List<RentalDetails>> callRentalDetails();
 
 }

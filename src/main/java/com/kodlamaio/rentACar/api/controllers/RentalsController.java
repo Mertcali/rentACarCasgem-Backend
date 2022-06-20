@@ -18,7 +18,6 @@ import com.kodlamaio.rentACar.business.response.rentals.ReadRentalResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.entities.concretes.Rental;
-import com.kodlamaio.rentACar.entities.dtos.RentalDetails;
 
 @RestController
 @RequestMapping("/api/rentals")
@@ -54,8 +53,8 @@ public class RentalsController {
 		return this.rentalService.getAll();
 	}
 	
-	@GetMapping("getRentalDetails")
+	/*@GetMapping("getRentalDetails")
 	public DataResult<List<RentalDetails>> getByRentalDetails(){
 		return rentalService.callRentalDetails();
-	}
+	}*/
 }
