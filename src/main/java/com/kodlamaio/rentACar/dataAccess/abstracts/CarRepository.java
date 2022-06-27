@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.kodlamaio.rentACar.entities.concretes.Car;
 
 public interface CarRepository extends JpaRepository<Car, Integer> {
-	List<Car> getByBrandId(int brandId);
+	List<Car> findByBrandId(int brandId);
 	Car findById(int id);
 	Car findByPlate(String name);
 }

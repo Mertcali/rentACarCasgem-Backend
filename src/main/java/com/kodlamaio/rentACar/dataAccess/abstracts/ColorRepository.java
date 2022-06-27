@@ -7,5 +7,6 @@ import com.kodlamaio.rentACar.entities.concretes.Color;
 public interface ColorRepository extends JpaRepository<Color, Integer> {
 	
 	Color findByName(String name);
+	Color findById(int id);
 
 }

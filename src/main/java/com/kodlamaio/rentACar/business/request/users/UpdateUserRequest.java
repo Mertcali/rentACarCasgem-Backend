@@ -1,5 +1,8 @@
 package com.kodlamaio.rentACar.business.request.users;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
+
 import com.kodlamaio.rentACar.business.request.cars.UpdateCarRequest;
 
 import lombok.AllArgsConstructor;
@@ -12,9 +15,11 @@ import lombok.NoArgsConstructor;
 public class UpdateUserRequest {
 	
 	private int id;
-	private String userFirstName;
-	private String userLastName;
-	private String userNationalIdentity;
 	private String userPassword;
+
+	@Size(min=4)
+	private int birthYear;
+	@Email
+	private String userEmail;
 
 }

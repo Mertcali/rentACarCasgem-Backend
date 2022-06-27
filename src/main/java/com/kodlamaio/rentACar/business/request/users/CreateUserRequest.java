@@ -1,5 +1,6 @@
 package com.kodlamaio.rentACar.business.request.users;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -15,28 +16,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateUserRequest {
 	
-	
-	private int id;
-	
-	@NotBlank
-	@NotNull
-	@Size(min=2)
-	private String userFirstName;
-	
-	@NotBlank
-	@NotNull
-	@Size(min=2)
-	private String userLastName;
-	
-	@NotNull
-	@NotBlank
-	@Size(min=11,max=11,message ="Tc No:11 Karakterden oluşmalı")
-	private String userNationalIdentity;
-	
-	@NotNull
-	@NotBlank
+
 	private String userPassword;
-	
+
+	@Size(min=4)
 	private int birthYear;
+	@Email
+	private String userEmail;
 
 }

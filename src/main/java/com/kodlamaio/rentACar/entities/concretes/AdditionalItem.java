@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "additionals"})
+//@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "additionals"})
 @Data
 @Entity
 @NoArgsConstructor
@@ -30,10 +30,13 @@ public class AdditionalItem {
 	@Column(name = "name")
 	private String name;
 	
+	@Column(name="description")
+	private String description;
+	
 	@Column(name = "daily_price")
 	private double dailyPrice;
 	
 	@OneToMany(mappedBy = "additionalItem")
-	List<Additional> additionals;
+	List<OrderedAdditionalItem> orderedAdditionalItems;
 
 }

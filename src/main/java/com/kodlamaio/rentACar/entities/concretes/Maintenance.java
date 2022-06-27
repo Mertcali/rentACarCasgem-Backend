@@ -1,6 +1,7 @@
 package com.kodlamaio.rentACar.entities.concretes;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "cars" })
+//@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "cars" })
 @Entity
 @Data
 @NoArgsConstructor
@@ -30,10 +31,10 @@ public class Maintenance {
 	private int id;
 
 	@Column(name = "date_sent")
-	private LocalDate dateSent;
+	private Date dateSent;
 
 	@Column(name = "date_returned")
-	private LocalDate dateReturned;
+	private Date dateReturned;
 
 	@ManyToOne
 	@JoinColumn(name = "car_id")

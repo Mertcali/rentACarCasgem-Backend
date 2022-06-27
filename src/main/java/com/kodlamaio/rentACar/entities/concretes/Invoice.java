@@ -28,14 +28,15 @@ public class Invoice {
 	private int id;
 	
 	@Column(name = "invoice_number")
-	private int invoiceNumber;
+	private String invoiceNumber;
 	
-	@Column(name = "total_price")
-	private double totalPrice;
+	
+	@Column(name = "state")
+	private int state;
 	
 	@ManyToOne
-	@JoinColumn(name = "rental_details_id")
-	private RentalDetails rentalDetails;
+	@JoinColumn(name = "rental_detail_id")
+	private RentalDetail rentalDetail;
 	
 }
 

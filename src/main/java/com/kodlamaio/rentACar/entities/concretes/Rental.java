@@ -1,6 +1,7 @@
 package com.kodlamaio.rentACar.entities.concretes;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -19,7 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "cars","cities","additionals" })
+//@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "cars","cities","additionals" })
 @Entity
 @Data
 @NoArgsConstructor
@@ -32,10 +33,10 @@ public class Rental {
 	private int id;
 
 	@Column(name = "pickup_date")
-	private LocalDate pickupDate;
+	private Date pickupDate;
 
-	@Column(name = "returned_date")
-	private LocalDate returnedDate;
+	@Column(name = "return_date")
+	private Date returnDate;
 
 	@Column(name = "total_days")
 	private int totalDays;
@@ -47,22 +48,32 @@ public class Rental {
 	@JoinColumn(name = "car_id")
 	private Car car;
 	
-	@ManyToOne
+	/*@ManyToOne
     @JoinColumn(name = "pick_up_city_id", referencedColumnName = "id")
     private City pickUpCity;
 
     @ManyToOne
     @JoinColumn(name = "return_city_id", referencedColumnName = "id")
-    private City returnCity;
+    private City returnCity;*/
+	
+	@Column(name = "pick_up_city_id")
+	private Integer pickupCityId;
+	
+	@Column(name = "return_city_id")
+	private Integer returnCityId;
     
-    @OneToMany(mappedBy = "rental")
-	List<Additional> additionals;
+
 
     @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
+    @JoinColumn(name="customer_id")
+    private Customer customer;
+    
+    @ManyToOne
+    @JoinColumn(name="city_id")
+    private City city;
+    
     
     @OneToMany(mappedBy = "rental")
-    private List<RentalDetails> rentalDetails;
+    private List<RentalDetail> rentalDetails;
     
 }

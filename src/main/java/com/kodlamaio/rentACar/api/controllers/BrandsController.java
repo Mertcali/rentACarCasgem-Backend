@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodlamaio.rentACar.business.abstracts.BrandService;
@@ -14,7 +15,7 @@ import com.kodlamaio.rentACar.business.request.brands.CreateBrandRequest;
 import com.kodlamaio.rentACar.business.request.brands.DeleteBrandRequest;
 import com.kodlamaio.rentACar.business.request.brands.UpdateBrandRequest;
 import com.kodlamaio.rentACar.business.response.brands.GetAllBrandsResponse;
-import com.kodlamaio.rentACar.business.response.brands.ReadBrandResponse;
+import com.kodlamaio.rentACar.business.response.brands.GetBrandResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.entities.concretes.Brand;
@@ -26,20 +27,15 @@ public class BrandsController {
 	@Autowired
 	private BrandService brandService;
 
-	// endpoint
-	@GetMapping("/sayhello")
-	public String sayHello() {
-		return "Hello Spring :)";
-	}
-
+	//endpoint
 	@PostMapping("/add")
 	public Result add(@RequestBody CreateBrandRequest createBrandRequest) {
 		return this.brandService.add(createBrandRequest);
 	}
 
 	@GetMapping("/getbyid")
-	public DataResult<Brand> getById(@RequestBody ReadBrandResponse readBrandResponse) {
-		return this.brandService.getById(readBrandResponse);
+	public DataResult<GetBrandResponse> getById(@RequestBody GetBrandResponse getBrandResponse) {
+		return brandService.getById(getBrandResponse);		
 	}
 
 	@PostMapping("/update")
@@ -51,8 +47,9 @@ public class BrandsController {
 	public Result delete(@RequestBody DeleteBrandRequest deleteBrandRequest) {
 		return this.brandService.delete(deleteBrandRequest);
 	}
+	
 
-	@GetMapping("/getAll")
+	@GetMapping("/getall")
 	public DataResult<List<GetAllBrandsResponse>> getAll() {
 		return this.brandService.getAll();
 	}

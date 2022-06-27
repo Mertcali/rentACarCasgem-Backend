@@ -17,7 +17,7 @@ import com.kodlamaio.rentACar.business.request.cars.CreateCarRequest;
 import com.kodlamaio.rentACar.business.request.cars.DeleteCarRequest;
 import com.kodlamaio.rentACar.business.request.cars.UpdateCarRequest;
 import com.kodlamaio.rentACar.business.response.cars.GetAllCarsResponse;
-import com.kodlamaio.rentACar.business.response.cars.ReadCarResponse;
+import com.kodlamaio.rentACar.business.response.cars.GetCarResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.entities.concretes.Car;
@@ -40,14 +40,14 @@ public class CarsController {
 		return this.carService.update(updateCarRequest);
 	}
 
-	@DeleteMapping("/delete")//neden? 
+	@DeleteMapping("/delete")
 	public Result delete(@RequestBody DeleteCarRequest deleteCarRequest) {
 		return this.carService.delete(deleteCarRequest);
 	}
 	
 	@GetMapping("/getbyid")
-	public DataResult<Car> getById(@RequestBody ReadCarResponse readCarResponse) {
-		return this.carService.getById(readCarResponse);
+	public DataResult<GetCarResponse> getById(@RequestBody GetCarResponse getCarResponse) {
+		return this.carService.getById(getCarResponse);
 	}
 	
 	@GetMapping("/getall")

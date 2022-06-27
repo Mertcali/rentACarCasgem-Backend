@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "pickUpCities","returnCities"})
+//@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "pickUpCities","returnCities"})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,11 +31,11 @@ public class City {
 	@Column(name = "name")
 	private String name;
 
-	@OneToMany(mappedBy = "pickUpCity")
-    private List<Rental> pickUpCities;
+	@OneToMany(mappedBy = "city")
+    private List<Rental> rentals;
 
-    @OneToMany(mappedBy = "returnCity")
-    private List<Rental> returnCities;
+    /*@OneToMany(mappedBy = "returnCity")
+    private List<Rental> returnCities;*/
 
 
 }

@@ -6,10 +6,10 @@ import com.kodlamaio.rentACar.business.request.rentalDetails.CreateRentalDetails
 import com.kodlamaio.rentACar.business.request.rentalDetails.DeleteRentalDetailsRequest;
 import com.kodlamaio.rentACar.business.request.rentalDetails.UpdateRentalDetailsRequest;
 import com.kodlamaio.rentACar.business.response.rentalDetails.GetAllRentalDetailsResponse;
-import com.kodlamaio.rentACar.business.response.rentalDetails.GetRentalDetailsResponse;
+import com.kodlamaio.rentACar.business.response.rentalDetails.GetRentalDetailResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
-import com.kodlamaio.rentACar.entities.concretes.RentalDetails;
+import com.kodlamaio.rentACar.entities.concretes.RentalDetail;
 
 public interface RentalDetailsService {
 
@@ -19,7 +19,7 @@ public interface RentalDetailsService {
 
 	Result delete(DeleteRentalDetailsRequest deleteRentalDetailsRequest);
 
-	DataResult<RentalDetails> getById(GetRentalDetailsResponse getRentalDetailsResponse);
+	DataResult<RentalDetail> getById(GetRentalDetailResponse getRentalDetailResponse);
 
 	DataResult<List<GetAllRentalDetailsResponse>> getAll();
 }

@@ -1,5 +1,7 @@
 package com.kodlamaio.rentACar.business.request.invoices;
 
+import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateInvoiceRequest {
 	
-	private int id;
-	private int invoiceNumber;
-	private int rentalDetailsId;
-	private double totalPrice;
+	@Size(min=7,max=8)
+	private String invoiceNumber;
+	private int rentalDetailId;
 
 }

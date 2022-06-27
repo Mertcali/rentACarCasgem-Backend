@@ -14,7 +14,8 @@ import com.kodlamaio.rentACar.business.abstracts.MaintenanceService;
 import com.kodlamaio.rentACar.business.request.maintenance.CreateMaintenanceRequest;
 import com.kodlamaio.rentACar.business.request.maintenance.DeleteMaintenanceRequest;
 import com.kodlamaio.rentACar.business.request.maintenance.UpdateMaintenanceRequest;
-import com.kodlamaio.rentACar.business.response.maintenances.ReadMaintenanceResponse;
+import com.kodlamaio.rentACar.business.response.maintenances.GetAllMaintenancesResponse;
+import com.kodlamaio.rentACar.business.response.maintenances.GetMaintenanceResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.entities.concretes.Maintenance;
@@ -42,13 +43,13 @@ public class MaintenancesController {
 	}
 
 	@GetMapping("/getbyid")
-	public DataResult<Maintenance> getById(@RequestBody ReadMaintenanceResponse readMaintenanceResponse) {
-		return this.maintenanceService.getById(readMaintenanceResponse);
+	public DataResult<GetMaintenanceResponse> getById(@RequestBody GetMaintenanceResponse getMaintenanceResponse) {
+		return this.maintenanceService.getById(getMaintenanceResponse);
 	}
 
 	@GetMapping("/getall")
-	public DataResult<List<Maintenance>> getAll(ReadMaintenanceResponse readMaintenanceResponse) {
-		return this.maintenanceService.getAll(readMaintenanceResponse);
+	public DataResult<List<GetAllMaintenancesResponse>> getAll() {
+		return this.maintenanceService.getAll();
 	}
 
 }

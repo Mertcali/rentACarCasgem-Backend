@@ -14,12 +14,12 @@ import com.kodlamaio.rentACar.business.request.rentalDetails.CreateRentalDetails
 import com.kodlamaio.rentACar.business.request.rentalDetails.DeleteRentalDetailsRequest;
 import com.kodlamaio.rentACar.business.request.rentalDetails.UpdateRentalDetailsRequest;
 import com.kodlamaio.rentACar.business.response.rentalDetails.GetAllRentalDetailsResponse;
-import com.kodlamaio.rentACar.business.response.rentalDetails.GetRentalDetailsResponse;
+import com.kodlamaio.rentACar.business.response.rentalDetails.GetRentalDetailResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.ErrorResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
-import com.kodlamaio.rentACar.entities.concretes.RentalDetails;
+import com.kodlamaio.rentACar.entities.concretes.RentalDetail;
 
 @RestController
 @RequestMapping("/api/rentaldetails")
@@ -30,29 +30,21 @@ public class RentalDetailsController {
 
 	@PostMapping("/add")
 	public Result add(@RequestBody CreateRentalDetailsRequest createRentalRequest) {
-		var result = rentalDetailsService.add(createRentalRequest);
-		if (result.isSuccess()) {
-			return new SuccessResult(result.getMessage());
-		} else {
-			return new ErrorResult(result.getMessage());
-		}
+		return this.rentalDetailsService.add(createRentalRequest);
 	}
 
 	@PostMapping("/update")
 	public Result update(@RequestBody UpdateRentalDetailsRequest updateRentalRequest) {
-		rentalDetailsService.update(updateRentalRequest);
-		return new SuccessResult();
+		return this.rentalDetailsService.update(updateRentalRequest);
 	}
 
 	@PostMapping("/delete")
 	public Result delete(@RequestBody DeleteRentalDetailsRequest deleteRentalRequest) {
-		rentalDetailsService.delete(deleteRentalRequest);
-		return new SuccessResult();
+		return this.rentalDetailsService.delete(deleteRentalRequest);
 	}
 
 	@GetMapping("/getbyid")
-	public DataResult<RentalDetails> getById(GetRentalDetailsResponse getRentalResponse) {
-
+	public DataResult<RentalDetail> getById(GetRentalDetailResponse getRentalResponse) {
 		return this.rentalDetailsService.getById(getRentalResponse);
 	}
 

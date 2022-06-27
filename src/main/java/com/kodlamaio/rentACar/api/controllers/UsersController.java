@@ -18,7 +18,7 @@ import com.kodlamaio.rentACar.business.request.users.CreateUserRequest;
 import com.kodlamaio.rentACar.business.request.users.DeleteUserRequest;
 import com.kodlamaio.rentACar.business.request.users.UpdateUserRequest;
 import com.kodlamaio.rentACar.business.response.users.GetAllUsersResponse;
-import com.kodlamaio.rentACar.business.response.users.ReadUserResponse;
+import com.kodlamaio.rentACar.business.response.users.GetUserResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.entities.concretes.User;
@@ -58,7 +58,7 @@ public class UsersController {
 	}
 	
 	@GetMapping("/getByNationaIdentity")
-	public DataResult<User> getByNationaIdentity(@RequestParam ReadUserResponse readUserResponse){
-		return userService.getByNationaIdentity(readUserResponse);
+	public DataResult<GetUserResponse> getByNationaIdentity(@RequestParam GetUserResponse getUserResponse){
+		return userService.getByNationaIdentity(getUserResponse);
 	}
 }

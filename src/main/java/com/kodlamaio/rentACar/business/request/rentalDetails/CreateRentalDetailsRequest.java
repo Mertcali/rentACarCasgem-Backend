@@ -1,5 +1,7 @@
 package com.kodlamaio.rentACar.business.request.rentalDetails;
 
+import com.sun.istack.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateRentalDetailsRequest {
 	
-	private int id;
-	private double totalPrice;
+
 	private int rentalId;
-	private int additionalId;
+	private int orderedAdditionalItemId;
 
 }

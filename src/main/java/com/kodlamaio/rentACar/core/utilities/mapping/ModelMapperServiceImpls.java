@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ModelMapperServiceImpls implements ModelMapperService {
 	private ModelMapper modelMapper;
-
+	//Bean : bellekte oluşturulmuş instance
 	public ModelMapperServiceImpls(ModelMapper modelMapper) {
 		super();
 		this.modelMapper = modelMapper;
@@ -28,5 +28,5 @@ public class ModelMapperServiceImpls implements ModelMapperService {
 	}
 	
 	
-//Bean : bellekte oluşturulmuş instance
+
 }

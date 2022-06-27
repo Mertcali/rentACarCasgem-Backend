@@ -1,5 +1,12 @@
 package com.kodlamaio.rentACar.business.request.cars;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
+import com.sun.istack.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,11 +17,20 @@ import lombok.NoArgsConstructor;
 public class UpdateCarRequest {
 
 	private int id;
+
+	@Size(min=2,max=20)
 	private String description;
+
+	@Min(value = 100)
 	private double dailyPrice;
+
 	private int brandId;
+
 	private int colorId;
+
+	@Size(min=7,max=8)
 	private String plate;
-	private int kilometer;
-	private int minFindexScore;
+
+	private Integer kilometer;
+	private Integer minFindexScore;
 }

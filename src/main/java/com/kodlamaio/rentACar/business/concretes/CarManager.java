@@ -11,7 +11,7 @@ import com.kodlamaio.rentACar.business.request.cars.CreateCarRequest;
 import com.kodlamaio.rentACar.business.request.cars.DeleteCarRequest;
 import com.kodlamaio.rentACar.business.request.cars.UpdateCarRequest;
 import com.kodlamaio.rentACar.business.response.cars.GetAllCarsResponse;
-import com.kodlamaio.rentACar.business.response.cars.ReadCarResponse;
+import com.kodlamaio.rentACar.business.response.cars.GetCarResponse;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
@@ -27,11 +27,15 @@ import com.kodlamaio.rentACar.entities.concretes.Color;
 @Service
 public class CarManager implements CarService {
 
-	@Autowired
 	private CarRepository carRepository;
+	private ModelMapperService modelMapperService;
 	
 	@Autowired
-	private ModelMapperService modelMapperService;
+	public CarManager(CarRepository carRepository, ModelMapperService modelMapperService) {
+		super();
+		this.carRepository = carRepository;
+		this.modelMapperService = modelMapperService;
+	}
 
 	@Override
 	public Result add(CreateCarRequest createCarRequest) {
@@ -40,7 +44,6 @@ public class CarManager implements CarService {
 		//Brand brand = this.modelMapperService.forRequest().map(createCarRequest, Brand.class);
 		checkIfCarExistsByPlate(createCarRequest.getPlate());
 		Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
-		car.setState(1);
 		
 //		if (carRepository.getByBrandId(createCarRequest.getBrandId()).size() < 5) {
 //			this.carRepository.save(car);
@@ -51,9 +54,9 @@ public class CarManager implements CarService {
 
 		if (maxBrand(createCarRequest.getBrandId())) {
 			this.carRepository.save(car);
-			return new SuccessResult("CAR.ADDED");
+			return new SuccessResult("CAR_ADDED");
 		} else {
-			return new ErrorResult("Not");
+			return new ErrorResult("NUMBER_OF_CARS_EXCEEDED");
 		}
 
 	}
@@ -63,7 +66,6 @@ public class CarManager implements CarService {
 //		Color color = new Color();
 //		Brand brand = new Brand();
 		Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
-		car.setState(1);
 //		car.setDescription(updateCarRequest.getDescription());
 //		car.setDailyPrice(updateCarRequest.getDailyPrice());
 		
@@ -75,7 +77,7 @@ public class CarManager implements CarService {
 //		car.setKilometer(updateCarRequest.getKilometer());
 
 		this.carRepository.save(car);
-		return new SuccessResult("UPDATED.CAR");
+		return new SuccessResult("CAR_UPDATED");
 
 	}
 
@@ -83,17 +85,10 @@ public class CarManager implements CarService {
 	public Result delete(DeleteCarRequest deleteCarRequest) {
 		Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
 		this.carRepository.delete(car);
-		return new SuccessResult("DELETED.CAR");
+		return new SuccessResult("CAR_DELETED");
 
 	}
 
-	private boolean maxBrand(int brandId) {
-		boolean exits = false;
-		if (carRepository.getByBrandId(brandId).size() < 5) {
-			exits = true;
-		}
-		return exits;
-	}
 
 	@Override
 	public DataResult<List<GetAllCarsResponse>> getAll() {
@@ -103,13 +98,14 @@ public class CarManager implements CarService {
 						.map(car, GetAllCarsResponse.class))
 						.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<GetAllCarsResponse>>(response);
+		return new SuccessDataResult<List<GetAllCarsResponse>>(response,"ALL_CARS_LISTED");
 	}
 
 	@Override
-	public DataResult<Car> getById(ReadCarResponse readCarResponse) {
-		
-		return new SuccessDataResult<Car>(this.carRepository.getById(readCarResponse.getId()));
+	public DataResult<GetCarResponse> getById(GetCarResponse getCarResponse) {
+		Car car = this.carRepository.findById(getCarResponse.getId());
+		GetCarResponse response = this.modelMapperService.forResponse().map(car, GetCarResponse.class);
+		return new SuccessDataResult<GetCarResponse>(response,"CAR_LISTED");
 	}
 	
 	private void checkIfCarExistsByPlate(String plate) {
@@ -117,6 +113,14 @@ public class CarManager implements CarService {
 		if(currentCar!=null) {
 			throw new BusinessException("CAR_EXISTS");
 		}
+	}
+	
+	private boolean maxBrand(int brandId) {
+		boolean exits = false;
+		if (carRepository.findByBrandId(brandId).size() < 5) {
+			exits = true;
+		}
+		return exits;
 	}
 
 }

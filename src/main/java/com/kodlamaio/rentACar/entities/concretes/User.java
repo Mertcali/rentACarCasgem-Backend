@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -18,14 +20,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
-public class User {
+public abstract class User {
 	@Id()
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private int id;
 	
-	@Column(name = "user_first_name")
+	/*@Column(name = "user_first_name")
 	private String userFirstName;
 	
 	@Column(name="user_last_name")
@@ -35,13 +38,19 @@ public class User {
 	private String nationalIdentity;
 	
 	@Column(name="birth_year")
-	private Integer birthYear;
+	private Integer birthYear;*/
 	
 	@Column(name="user_password")
 	private String userPassword;
 	
-	@OneToMany (mappedBy = "user")
+	@Column(name ="user_email")
+	private String userEmail; 
+	
+	/*@OneToMany (mappedBy = "user")
 	private List<Rental> rentals;
+	
+	@OneToMany(mappedBy="user")
+	private List<Adress> adresses;*/
 	
 	
 }
