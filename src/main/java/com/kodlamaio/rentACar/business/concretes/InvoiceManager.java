@@ -12,8 +12,14 @@ import com.kodlamaio.rentACar.business.abstracts.InvoiceService;
 import com.kodlamaio.rentACar.business.request.invoices.CreateInvoiceRequest;
 import com.kodlamaio.rentACar.business.request.invoices.DeleteInvoiceRequest;
 import com.kodlamaio.rentACar.business.request.invoices.UpdateInvoiceRequest;
+import com.kodlamaio.rentACar.business.request.invoices.forCorporateCustomers.CreateInvoiceForCorporateCustomerRequest;
+import com.kodlamaio.rentACar.business.request.invoices.forIndividualCustomers.CreateInvoiceForIndividualCustomerRequest;
 import com.kodlamaio.rentACar.business.response.invoices.GetAllInvoicesResponse;
 import com.kodlamaio.rentACar.business.response.invoices.GetInvoiceResponse;
+import com.kodlamaio.rentACar.business.response.invoices.forCorporateCustomers.GetAllInvoicesForCorporateCustomersResponse;
+import com.kodlamaio.rentACar.business.response.invoices.forCorporateCustomers.GetInvoiceForCorporateCustomerResponse;
+import com.kodlamaio.rentACar.business.response.invoices.forIndividualCustomers.GetAllInvoicesForIndividualCustomersResponse;
+import com.kodlamaio.rentACar.business.response.invoices.forIndividualCustomers.GetInvoiceForIndividualCustomerResponse;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
@@ -62,6 +68,38 @@ public class InvoiceManager implements InvoiceService{
 	
 	}
 	
+	@Override
+	public Result addInvoiceForIndividualCustomer(
+			CreateInvoiceForIndividualCustomerRequest createInvoiceForIndividualCustomerRequest) {
+		checkIfInvoiceExistsByNumber(createInvoiceForIndividualCustomerRequest.getInvoiceNumber());
+		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceForIndividualCustomerRequest, Invoice.class);
+		//RentalDetail rentalDetail=this.rentalDetailRepository.findById(createInvoiceRequest.getRentalDetailId());
+		Rental rental = this.rentalRepository.findById(createInvoiceForIndividualCustomerRequest.getRentalId());
+		invoice.setInvoiceNumber(createInvoiceNumber());
+		invoice.setRental(rental);
+		invoice.setState(1);
+		System.out.println(rental.getId());
+		invoiceRepository.save(invoice);
+	    
+		return  new SuccessResult("INVOICE_FOR_IND_ADDED");
+	}
+
+	@Override
+	public Result addInvoiceForCorporateCustomer(
+			CreateInvoiceForCorporateCustomerRequest createInvoiceForCorporateCustomerRequest) {
+		checkIfInvoiceExistsByNumber(createInvoiceForCorporateCustomerRequest.getInvoiceNumber());
+		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceForCorporateCustomerRequest, Invoice.class);
+		//RentalDetail rentalDetail=this.rentalDetailRepository.findById(createInvoiceRequest.getRentalDetailId());
+		Rental rental = this.rentalRepository.findById(createInvoiceForCorporateCustomerRequest.getRentalId());
+		invoice.setInvoiceNumber(createInvoiceNumber());
+		invoice.setRental(rental);
+		invoice.setState(1);
+		System.out.println(rental.getId());
+		invoiceRepository.save(invoice);
+	    
+		return  new SuccessResult("INVOICE_FOR_CORP_ADDED");
+	}
+	
 
 	@Override
 	public Result update(UpdateInvoiceRequest updateInvoiceRequest) {
@@ -88,12 +126,42 @@ public class InvoiceManager implements InvoiceService{
 		GetInvoiceResponse response = this.modelMapperService.forResponse().map(invoice, GetInvoiceResponse.class);
 		return new SuccessDataResult<GetInvoiceResponse>(response,"INVOICE_LISTED");
 	}
+	
+	@Override
+	public DataResult<GetInvoiceForCorporateCustomerResponse> getByCorporateCustomerId(
+			GetInvoiceForCorporateCustomerResponse getInvoiceForCorporateCustomerResponse) {
+		Invoice invoice = this.invoiceRepository.findById(getInvoiceForCorporateCustomerResponse.getId());
+		GetInvoiceForCorporateCustomerResponse response = this.modelMapperService.forResponse().map(invoice, GetInvoiceForCorporateCustomerResponse.class);
+		return new SuccessDataResult<GetInvoiceForCorporateCustomerResponse>(response,"INVOICE_LISTED");
+	}
+
+	@Override
+	public DataResult<GetInvoiceForIndividualCustomerResponse> getByIndividualCustomerId(
+			GetInvoiceForIndividualCustomerResponse getInvoiceForIndividualCustomerResponse) {
+		Invoice invoice = this.invoiceRepository.findById(getInvoiceForIndividualCustomerResponse.getId());
+		GetInvoiceForIndividualCustomerResponse response = this.modelMapperService.forResponse().map(invoice, GetInvoiceForIndividualCustomerResponse.class);
+		return new SuccessDataResult<GetInvoiceForIndividualCustomerResponse>(response,"INVOICE_LISTED");
+	}
 
 	@Override
 	public DataResult<List<GetAllInvoicesResponse>> getAll() {
 		List<Invoice> invoices = this.invoiceRepository.findAll();
 		List<GetAllInvoicesResponse> response = invoices.stream().map(invoice -> this.modelMapperService.forResponse().map(invoice, GetAllInvoicesResponse.class)).collect(Collectors.toList());
 		return new SuccessDataResult<List<GetAllInvoicesResponse>>(response,"ALL_INVOICES_LISTED");
+	}
+	
+	@Override
+	public DataResult<List<GetAllInvoicesForIndividualCustomersResponse>> getAllForIndividualCustomers() {
+		List<Invoice> invoices = this.invoiceRepository.findAll();
+		List<GetAllInvoicesForIndividualCustomersResponse> response = invoices.stream().map(invoice -> this.modelMapperService.forResponse().map(invoice, GetAllInvoicesForIndividualCustomersResponse.class)).collect(Collectors.toList());
+		return new SuccessDataResult<List<GetAllInvoicesForIndividualCustomersResponse>>(response,"ALL_INVOICES_LISTED");
+	}
+
+	@Override
+	public DataResult<List<GetAllInvoicesForCorporateCustomersResponse>> getallForCorporateCustomers() {
+		List<Invoice> invoices = this.invoiceRepository.findAll();
+		List<GetAllInvoicesForCorporateCustomersResponse> response = invoices.stream().map(invoice -> this.modelMapperService.forResponse().map(invoice, GetAllInvoicesForCorporateCustomersResponse.class)).collect(Collectors.toList());
+		return new SuccessDataResult<List<GetAllInvoicesForCorporateCustomersResponse>>(response,"ALL_INVOICES_LISTED");
 	}
 	
 	private void checkIfInvoiceExistsByNumber(String invoiceNumber) {
@@ -109,4 +177,10 @@ public class InvoiceManager implements InvoiceService{
 		String stringSayi = String.valueOf(sayi);
 		return stringSayi;
  }
+
+
+
+
+
+
 }

@@ -13,11 +13,17 @@ import com.kodlamaio.rentACar.business.abstracts.InvoiceService;
 import com.kodlamaio.rentACar.business.abstracts.RentalService;
 import com.kodlamaio.rentACar.business.request.invoices.CreateInvoiceRequest;
 import com.kodlamaio.rentACar.business.request.invoices.DeleteInvoiceRequest;
-import com.kodlamaio.rentACar.business.request.rental.CreateRentalRequest;
-import com.kodlamaio.rentACar.business.request.rental.DeleteRentalRequest;
-import com.kodlamaio.rentACar.business.request.rental.UpdateRentalRequest;
+import com.kodlamaio.rentACar.business.request.rentals.CreateRentalRequest;
+import com.kodlamaio.rentACar.business.request.rentals.DeleteRentalRequest;
+import com.kodlamaio.rentACar.business.request.rentals.UpdateRentalRequest;
+import com.kodlamaio.rentACar.business.request.rentals.forCorporateCustomers.CreateRentalForCorporateRequest;
+import com.kodlamaio.rentACar.business.request.rentals.forIndividualCustomers.CreateRentalForIndividualRequest;
 import com.kodlamaio.rentACar.business.response.rentals.GetAllRentalsResponse;
 import com.kodlamaio.rentACar.business.response.rentals.GetRentalResponse;
+import com.kodlamaio.rentACar.business.response.rentals.forCorporateCustomers.GetAllRentalsForCorporateCustomersResponse;
+import com.kodlamaio.rentACar.business.response.rentals.forCorporateCustomers.GetRentalForCorporateCustomerResponse;
+import com.kodlamaio.rentACar.business.response.rentals.forIndividualCustomers.GetAllRentalsForIndividualCustomers;
+import com.kodlamaio.rentACar.business.response.rentals.forIndividualCustomers.GetRentalForIndividualCustomer;
 import com.kodlamaio.rentACar.core.utilities.adapters.abstracts.FindexService;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
@@ -27,6 +33,7 @@ import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CarRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CityRepository;
+import com.kodlamaio.rentACar.dataAccess.abstracts.CorporateCustomerRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CustomerRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.IndividualCustomerRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.InvoiceRepository;
@@ -34,7 +41,9 @@ import com.kodlamaio.rentACar.dataAccess.abstracts.OrderedAdditionalItemReposito
 import com.kodlamaio.rentACar.dataAccess.abstracts.RentalRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.UserRepository;
 import com.kodlamaio.rentACar.entities.concretes.Car;
+import com.kodlamaio.rentACar.entities.concretes.CorporateCustomer;
 import com.kodlamaio.rentACar.entities.concretes.Customer;
+import com.kodlamaio.rentACar.entities.concretes.IndividualCustomer;
 import com.kodlamaio.rentACar.entities.concretes.Invoice;
 import com.kodlamaio.rentACar.entities.concretes.Rental;
 
@@ -53,13 +62,16 @@ public class RentalManager implements RentalService {
 	private InvoiceRepository invoiceRepository;
 	private InvoiceService invoiceService;
 	private OrderedAdditionalItemRepository orderedAdditionalItemRepository;
+	private CorporateCustomerRepository corporateCustomerRepository;
 	
 	@Autowired
 	public RentalManager(RentalRepository rentalRepository, CarRepository carRepository, CityRepository cityRepository,
 			UserRepository userRepository, ModelMapperService modelMapperService,
 		    FindexService findexService,
 			IndividualCustomerRepository individualCustomerRepository, CustomerRepository customerRepository,
-			InvoiceRepository invoiceRepository, InvoiceService invoiceService, OrderedAdditionalItemRepository orderedAdditionalItemRepository) {
+			InvoiceRepository invoiceRepository, InvoiceService invoiceService, 
+			OrderedAdditionalItemRepository orderedAdditionalItemRepository,
+			CorporateCustomerRepository corporateCustomerRepository) {
 		super();
 		this.rentalRepository = rentalRepository;
 		this.carRepository = carRepository;
@@ -72,13 +84,14 @@ public class RentalManager implements RentalService {
 		this.invoiceRepository = invoiceRepository;
 		this.invoiceService = invoiceService;
 		this.orderedAdditionalItemRepository = orderedAdditionalItemRepository;
-	}
+		this.corporateCustomerRepository=corporateCustomerRepository;	
+		}
 
 	@Override
 	public Result add(CreateRentalRequest createRentalRequest) {
 
 		checkIfCarExistsById(createRentalRequest.getCarId());
-		checkIfCustomersExistsById(createRentalRequest.getCustomerId());
+		checkIfCustomersExistsById(createRentalRequest.getCustomerId()); 
 		checkCarState(createRentalRequest.getCarId());
 		
 		Rental rentalToAdd = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
@@ -112,6 +125,58 @@ public class RentalManager implements RentalService {
 		return new SuccessResult("RENTAL_ADDED_SUCCESSFULLY");
 
 	}
+	
+	@Override
+	public Result addRentalForIndividual(CreateRentalForIndividualRequest createRentalForIndividualRequest) {
+		checkIfCarExistsById(createRentalForIndividualRequest.getCarId());
+		checkIfCustomersExistsById(createRentalForIndividualRequest.getIndividualCustomerId()); // individual için düzenlenecek
+		checkCarState(createRentalForIndividualRequest.getCarId());
+		
+		Rental rentalToAdd = this.modelMapperService.forRequest().map(createRentalForIndividualRequest, Rental.class);
+		Integer orderedAdditionalItemId = createRentalForIndividualRequest.getOrderedAdditionalItemId();
+		IndividualCustomer individualCustomer = this.individualCustomerRepository.findById(createRentalForIndividualRequest.getIndividualCustomerId());
+		Car carToRent = carRepository.findById(rentalToAdd.getCar().getId());
+		int orderedAdditionalItemIdInt = orderedAdditionalItemId;
+		rentalToAdd.setOrderedAdditionalItem(orderedAdditionalItemRepository.findById(orderedAdditionalItemIdInt));
+		rentalToAdd.setTotalDaysRental(calculateTotalDay(createRentalForIndividualRequest.getPickupDate(), createRentalForIndividualRequest.getReturnDate()));
+		checkFindexScore(carToRent.getMinFindexScore(), individualCustomer.getFindexScore());	
+		
+		if(orderedAdditionalItemId!=null) {		
+			checkCityStateAndAdditionalItemAndCalculatePrice(rentalToAdd,carToRent);		
+		}else {
+			checkCityStateAndCalculatePrice(rentalToAdd, carToRent);			
+		}
+		carToRent.setState(1);
+		rentalRepository.save(rentalToAdd);
+		return new SuccessResult("RENTAL_ADDED_SUCCESSFULLY");
+		
+	}
+
+	@Override
+	public Result addRentalForCorporate(CreateRentalForCorporateRequest createRentalForCorporateRequest) {
+		checkIfCarExistsById(createRentalForCorporateRequest.getCarId());
+		checkIfCustomersExistsById(createRentalForCorporateRequest.getCorporateCustomerId());
+		checkCarState(createRentalForCorporateRequest.getCarId());
+		
+		Rental rentalToAdd = this.modelMapperService.forRequest().map(createRentalForCorporateRequest, Rental.class);
+		Integer orderedAdditionalItemId = createRentalForCorporateRequest.getOrderedAdditionalItemId();
+		CorporateCustomer corporateCustomer = this.corporateCustomerRepository.findById(createRentalForCorporateRequest.getCorporateCustomerId());
+		Car carToRent = carRepository.findById(rentalToAdd.getCar().getId());
+		int orderedAdditionalItemIdInt = orderedAdditionalItemId;
+		rentalToAdd.setOrderedAdditionalItem(orderedAdditionalItemRepository.findById(orderedAdditionalItemIdInt));
+		rentalToAdd.setTotalDaysRental(calculateTotalDay(createRentalForCorporateRequest.getPickupDate(), createRentalForCorporateRequest.getReturnDate()));
+		checkFindexScore(carToRent.getMinFindexScore(), corporateCustomer.getFindexScore());	
+		
+		if(orderedAdditionalItemId!=null) {		
+			checkCityStateAndAdditionalItemAndCalculatePrice(rentalToAdd,carToRent);		
+		}else {
+			checkCityStateAndCalculatePrice(rentalToAdd, carToRent);			
+		}
+		carToRent.setState(1);
+		rentalRepository.save(rentalToAdd);
+		return new SuccessResult("RENTAL_ADDED_SUCCESSFULLY");
+	}
+	
 
 	@Override
 	public Result update(UpdateRentalRequest updateRentalRequest) {
@@ -140,6 +205,22 @@ public class RentalManager implements RentalService {
 		GetRentalResponse response = this.modelMapperService.forResponse().map(rental, GetRentalResponse.class);
 		return new SuccessDataResult<GetRentalResponse>(response,"RENTAL_LISTED");
 	}
+	
+	@Override
+	public DataResult<GetRentalForCorporateCustomerResponse> getByCorporateCustomerId(
+			GetRentalForCorporateCustomerResponse getRentalForCorporateCustomerResponse) {
+		Rental rental = this.rentalRepository.findById(getRentalForCorporateCustomerResponse.getId());
+		GetRentalForCorporateCustomerResponse response = this.modelMapperService.forResponse().map(rental, GetRentalForCorporateCustomerResponse.class);
+		return new SuccessDataResult<GetRentalForCorporateCustomerResponse>(response,"RENTAL_FOR_CORPORATE_LISTED");
+	}
+
+	@Override
+	public DataResult<GetRentalForIndividualCustomer> getByIndividualCustomerId(
+			GetRentalForIndividualCustomer getRentalForIndividualCustomer) {
+		Rental rental = this.rentalRepository.findById(getRentalForIndividualCustomer.getId());
+		GetRentalForIndividualCustomer response = this.modelMapperService.forResponse().map(rental, GetRentalForIndividualCustomer.class);
+		return new SuccessDataResult<GetRentalForIndividualCustomer>(response,"RENTAL_FOR_CORPORATE_LISTED");
+	}
 
 	@Override
 	public DataResult<List<GetAllRentalsResponse>> getAll() {
@@ -150,6 +231,23 @@ public class RentalManager implements RentalService {
 		return new SuccessDataResult<List<GetAllRentalsResponse>>(response,"ALL_RENTALS_LISTED");
 		
 		//return new SuccessDataResult<List<Rental>>(this.rentalRepository.findAll(),"ALL_RENTALS_LISTED");
+	}
+	
+
+	@Override
+	public DataResult<List<GetAllRentalsForCorporateCustomersResponse>> getAllRentalsForCorporateCustomers() {
+		List<Rental> rentals = this.rentalRepository.findAll();
+		List<GetAllRentalsForCorporateCustomersResponse> response = rentals.stream()
+				.map(rental -> this.modelMapperService.forResponse().map(rental, GetAllRentalsForCorporateCustomersResponse.class)).collect(Collectors.toList());
+		return new SuccessDataResult<List<GetAllRentalsForCorporateCustomersResponse>>(response,"ALL_RENTALS_FOR_CORPORATE_LISTED");
+	}
+
+	@Override
+	public DataResult<List<GetAllRentalsForIndividualCustomers>> getAllRentalsForIndividualCustomers() {
+		List<Rental> rentals = this.rentalRepository.findAll();
+		List<GetAllRentalsForIndividualCustomers> response = rentals.stream()
+				.map(rental -> this.modelMapperService.forResponse().map(rental, GetAllRentalsForIndividualCustomers.class)).collect(Collectors.toList());
+		return new SuccessDataResult<List<GetAllRentalsForIndividualCustomers>>(response,"ALL_RENTALS_FOR_CORPORATE_LISTED");
 	}
 
 	
@@ -232,6 +330,10 @@ public class RentalManager implements RentalService {
 		DeleteInvoiceRequest deleteInvoiceRequest = new DeleteInvoiceRequest(invoice.getId());	
 		this.invoiceService.delete(deleteInvoiceRequest);
 	}
+
+
+
+
 	
 
 }
