@@ -1,4 +1,4 @@
-package com.kodlamaio.rentACar.business.response.rentalDetails;
+/*package com.kodlamaio.rentACar.business.response.rentalDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,3 +14,4 @@ public class GetRentalDetailResponse {
 	private int additionalId;
 	private double totalPrice;
 }
+*/

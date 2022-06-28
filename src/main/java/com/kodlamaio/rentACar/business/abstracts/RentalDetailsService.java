@@ -1,4 +1,4 @@
-package com.kodlamaio.rentACar.business.abstracts;
+/*package com.kodlamaio.rentACar.business.abstracts;
 
 import java.util.List;
 
@@ -23,3 +23,4 @@ public interface RentalDetailsService {
 
 	DataResult<List<GetAllRentalDetailsResponse>> getAll();
 }
+*/

@@ -25,5 +25,7 @@ public class CreateRentalRequest {
 	private int pickUpCityId;
 
 	private int returnCityId;
+	
+	private int orderedAdditionalItemId;
 
 }

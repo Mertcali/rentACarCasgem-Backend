@@ -18,6 +18,6 @@ public class UpdateInvoiceRequest {
 	@Size(min=8,max=10)
 	private String invoiceNumber;
 
-	private int rentalDetailsId;
+	private int rentalId;
 	private double totalPrice;
 }

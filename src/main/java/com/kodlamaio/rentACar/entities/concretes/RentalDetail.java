@@ -1,4 +1,4 @@
-package com.kodlamaio.rentACar.entities.concretes;
+/*package com.kodlamaio.rentACar.entities.concretes;
 
 import java.util.List;
 
@@ -41,3 +41,4 @@ public class RentalDetail {
 	private List<Invoice> invoices;
 	
 }
+*/

@@ -35,8 +35,8 @@ public class Invoice {
 	private int state;
 	
 	@ManyToOne
-	@JoinColumn(name = "rental_detail_id")
-	private RentalDetail rentalDetail;
+	@JoinColumn(name = "rental_id")
+	private Rental rental;
 	
 }
 

@@ -1,4 +1,4 @@
-package com.kodlamaio.rentACar.business.concretes;
+/*package com.kodlamaio.rentACar.business.concretes;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,4 +87,4 @@ public class RentalDetailManager implements RentalDetailsService{
 		return new SuccessDataResult<List<GetAllRentalDetailsResponse>>(response,"ALL_RENTAL_DETAILS_LISTED");
 	}
 
-}
+}*/

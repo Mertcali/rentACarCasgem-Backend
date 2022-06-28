@@ -2,13 +2,16 @@ package com.kodlamaio.rentACar.business.concretes;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kodlamaio.rentACar.business.abstracts.InvoiceService;
 import com.kodlamaio.rentACar.business.abstracts.RentalService;
+import com.kodlamaio.rentACar.business.request.invoices.CreateInvoiceRequest;
 import com.kodlamaio.rentACar.business.request.rental.CreateRentalRequest;
 import com.kodlamaio.rentACar.business.request.rental.DeleteRentalRequest;
 import com.kodlamaio.rentACar.business.request.rental.UpdateRentalRequest;
@@ -26,12 +29,11 @@ import com.kodlamaio.rentACar.dataAccess.abstracts.CityRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.CustomerRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.IndividualCustomerRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.InvoiceRepository;
-import com.kodlamaio.rentACar.dataAccess.abstracts.RentalDetailRepository;
+import com.kodlamaio.rentACar.dataAccess.abstracts.OrderedAdditionalItemRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.RentalRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.UserRepository;
 import com.kodlamaio.rentACar.entities.concretes.Car;
 import com.kodlamaio.rentACar.entities.concretes.Customer;
-import com.kodlamaio.rentACar.entities.concretes.Invoice;
 import com.kodlamaio.rentACar.entities.concretes.Rental;
 
 @Service
@@ -43,33 +45,32 @@ public class RentalManager implements RentalService {
 	private CityRepository cityRepository;
 	private UserRepository userRepository;
 	private ModelMapperService modelMapperService;
-	private RentalDetailRepository rentalDetailRepository;
 	private FindexService findexService;
 	private IndividualCustomerRepository individualCustomerRepository;
 	private CustomerRepository customerRepository;
 	private InvoiceRepository invoiceRepository;
+	private InvoiceService invoiceService;
+	private OrderedAdditionalItemRepository orderedAdditionalItemRepository;
 	
 	@Autowired
 	public RentalManager(RentalRepository rentalRepository, CarRepository carRepository, CityRepository cityRepository,
 			UserRepository userRepository, ModelMapperService modelMapperService,
-			RentalDetailRepository rentalDetailRepository, FindexService findexService,
+		    FindexService findexService,
 			IndividualCustomerRepository individualCustomerRepository, CustomerRepository customerRepository,
-			InvoiceRepository invoiceRepository) {
+			InvoiceRepository invoiceRepository, InvoiceService invoiceService, OrderedAdditionalItemRepository orderedAdditionalItemRepository) {
 		super();
 		this.rentalRepository = rentalRepository;
 		this.carRepository = carRepository;
 		this.cityRepository = cityRepository;
 		this.userRepository = userRepository;
 		this.modelMapperService = modelMapperService;
-		this.rentalDetailRepository = rentalDetailRepository;
 		this.findexService = findexService;
 		this.individualCustomerRepository = individualCustomerRepository;
 		this.customerRepository = customerRepository;
 		this.invoiceRepository = invoiceRepository;
+		this.invoiceService = invoiceService;
+		this.orderedAdditionalItemRepository = orderedAdditionalItemRepository;
 	}
-
-	
-
 
 	@Override
 	public Result add(CreateRentalRequest createRentalRequest) {
@@ -79,28 +80,44 @@ public class RentalManager implements RentalService {
 		checkCarState(createRentalRequest.getCarId());
 		
 		Rental rentalToAdd = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
+		//OrderedAdditionalItem orderedAdditionalItem = orderedAdditionalItemRepository.findById(createRentalRequest.getOrderedAdditionalItemId());
+		Integer orderedAdditionalItemId = createRentalRequest.getOrderedAdditionalItemId();
 		Customer customer = this.customerRepository.findById(createRentalRequest.getCustomerId());
 		Car carToRent = carRepository.findById(rentalToAdd.getCar().getId());
+		int orderedAdditionalItemIdInt = orderedAdditionalItemId;
+		rentalToAdd.setOrderedAdditionalItem(orderedAdditionalItemRepository.findById(orderedAdditionalItemIdInt));
 		rentalToAdd.setTotalDays(calculateTotalDay(createRentalRequest.getPickupDate(), createRentalRequest.getReturnDate()));
 		checkFindexScore(carToRent.getMinFindexScore(), customer.getFindexScore());	
-		//BAŞKA ŞEHİRDE TESLİM EDİLECEKSE +750 TL EKLE METOTLAŞTIRILABİLİR
+		
 		//KİRALANAN TARİH ARALIĞI KİRALANABİLME İÇİN KONTROL EDİLMELİ, EKLENECEK
-		//ARAÇ KİRALAMADAN SONRA FATURA OLUŞTURULMALI
+		//ARAÇ KİRALAMADAN SONRA FATURA OLUŞTURULMALI 
+		//--> Bunun yerine invoice'teki add direkt kullanılabilirmiş o yüzden addInvoice commentlendi
 		//ADDITIONAL EKLEMELERİ GELMELİ
-		if(rentalToAdd.getPickupCityId() != rentalToAdd.getReturnCityId()) {
-			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDays() * carToRent.getDailyPrice())+750);
+		
+		if(orderedAdditionalItemId!=null) {		
+			checkCityStateAndAdditionalItemAndCalculatePrice(rentalToAdd,carToRent);		
 		}else {
-			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDays() * carToRent.getDailyPrice()));
-		}	
+			checkCityStateAndCalculatePrice(rentalToAdd, carToRent);			
+		}
+		
+		//cleanCode'a biraz karşı bir integer yapısı ve kontrol şekli kullandım.Bunlar düzenlenmeli.
+		
 		carToRent.setState(1);
 		//STATE-0 Müsait
 		//STATE-1 Araç kiralanmış
 		//STATE-2 Araç bakımda
-		
+
 		rentalRepository.save(rentalToAdd);
 		
+		//addInvoice(rentalToAdd);
 		
 		return new SuccessResult("RENTAL_ADDED_SUCCESSFULLY");
+
+		
+		
+		
+		
+
 
 	}
 
@@ -188,5 +205,30 @@ public class RentalManager implements RentalService {
 		} 
 	}
 	
+	private void addInvoice(Rental addedRental) {
+		Random random = new Random();
+		int sayi = random.nextInt(999999)+1000000;
+		String stringSayi = String.valueOf(sayi);
+		CreateInvoiceRequest createInvoiceRequest = new CreateInvoiceRequest(stringSayi,addedRental.getId());
+		invoiceService.add(createInvoiceRequest);
+	}
 	
+	private void checkCityStateAndCalculatePrice(Rental rentalToAdd, Car carToRent) {
+		if(rentalToAdd.getPickupCityId() != rentalToAdd.getReturnCityId()) {
+			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDays() * carToRent.getDailyPrice())+750);
+		}else {
+			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDays() * carToRent.getDailyPrice()));
+		}	
+	}
+	
+	private void checkCityStateAndAdditionalItemAndCalculatePrice(Rental rentalToAdd, Car carToRent) {
+		if(rentalToAdd.getPickupCityId() != rentalToAdd.getReturnCityId()) {
+			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDays() * carToRent.getDailyPrice())+ rentalToAdd.getOrderedAdditionalItem().getTotalPrice()+750);
+		}else {
+			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDays() * carToRent.getDailyPrice())+ rentalToAdd.getOrderedAdditionalItem().getTotalPrice());
+		}
+	}
+
 }
+	
+

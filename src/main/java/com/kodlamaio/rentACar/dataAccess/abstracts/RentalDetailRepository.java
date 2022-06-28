@@ -1,4 +1,4 @@
-package com.kodlamaio.rentACar.dataAccess.abstracts;
+/*package com.kodlamaio.rentACar.dataAccess.abstracts;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,6 +12,7 @@ public interface RentalDetailRepository extends JpaRepository<RentalDetail, Inte
 			+ " r.pickUpCity, r.returnCity) "
 			+ "From Car c "
 			+ "Inner Join c.rentals r ", nativeQuery = true	)
-	List<com.kodlamaio.rentACar.entities.concretes.RentalDetails> callRentalDetails(); */
+	List<com.kodlamaio.rentACar.entities.concretes.RentalDetails> callRentalDetails(); 
 		RentalDetail findById(int id);
 }
+*/

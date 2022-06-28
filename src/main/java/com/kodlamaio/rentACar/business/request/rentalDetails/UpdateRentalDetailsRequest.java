@@ -1,4 +1,4 @@
-package com.kodlamaio.rentACar.business.request.rentalDetails;
+/*package com.kodlamaio.rentACar.business.request.rentalDetails;
 
 import com.sun.istack.NotNull;
 
@@ -17,3 +17,4 @@ public class UpdateRentalDetailsRequest {
 	private int orderedAdditionalItemId;
 
 }
+*/

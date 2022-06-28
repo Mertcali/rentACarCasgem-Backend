@@ -19,33 +19,34 @@ import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
 import com.kodlamaio.rentACar.dataAccess.abstracts.InvoiceRepository;
-import com.kodlamaio.rentACar.dataAccess.abstracts.RentalDetailRepository;
-import com.kodlamaio.rentACar.entities.concretes.Brand;
+import com.kodlamaio.rentACar.dataAccess.abstracts.RentalRepository;
 import com.kodlamaio.rentACar.entities.concretes.Invoice;
-import com.kodlamaio.rentACar.entities.concretes.RentalDetail;
+import com.kodlamaio.rentACar.entities.concretes.Rental;
 @Service
 public class InvoiceManager implements InvoiceService{
 	
 	
 	private InvoiceRepository invoiceRepository;
 	private ModelMapperService modelMapperService;
-	private RentalDetailRepository rentalDetailRepository;
+
+	private RentalRepository rentalRepository;
 
 	@Autowired
 	public InvoiceManager(InvoiceRepository invoiceRepository, ModelMapperService modelMapperService,
-			RentalDetailRepository rentalDetailRepository) {
+			RentalRepository rentalRepository) {
 		super();
 		this.invoiceRepository = invoiceRepository;
 		this.modelMapperService = modelMapperService;
-		this.rentalDetailRepository = rentalDetailRepository;
+		this.rentalRepository = rentalRepository;
 	}
 
 	@Override
 	public Result add(CreateInvoiceRequest createInvoiceRequest) {
 		checkIfInvoiceExistsByNumber(createInvoiceRequest.getInvoiceNumber());
 		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceRequest, Invoice.class);
-		RentalDetail rentalDetail=this.rentalDetailRepository.findById(createInvoiceRequest.getRentalDetailId());
-		invoice.setRentalDetail(rentalDetail);
+		//RentalDetail rentalDetail=this.rentalDetailRepository.findById(createInvoiceRequest.getRentalDetailId());
+		Rental rental = this.rentalRepository.findById(createInvoiceRequest.getRentalId());
+		invoice.setRental(rental);
 		invoice.setState(1);
 	    //STATE-0 --> IPTAL EDILMIS FATURA
 		//STATE-1 --> AKTİF FATURA

@@ -72,8 +72,15 @@ public class Rental {
     @JoinColumn(name="city_id")
     private City city;
     
+	@ManyToOne
+	@JoinColumn(name = "ordered_additional_item_id")
+	private OrderedAdditionalItem orderedAdditionalItem;
+	
+	@OneToMany(mappedBy = "rental")
+	private List<Invoice> invoices;
     
-    @OneToMany(mappedBy = "rental")
-    private List<RentalDetail> rentalDetails;
+    
+    /*@OneToMany(mappedBy = "rental")
+    private List<RentalDetail> rentalDetails;*/
     
 }

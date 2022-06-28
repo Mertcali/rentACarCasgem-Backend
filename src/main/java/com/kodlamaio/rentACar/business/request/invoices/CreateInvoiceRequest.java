@@ -13,6 +13,6 @@ public class CreateInvoiceRequest {
 	
 	@Size(min=7,max=8)
 	private String invoiceNumber;
-	private int rentalDetailId;
+	private int rentalId;
 
 }

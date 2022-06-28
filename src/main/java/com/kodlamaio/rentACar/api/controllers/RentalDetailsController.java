@@ -1,4 +1,4 @@
-package com.kodlamaio.rentACar.api.controllers;
+/*package com.kodlamaio.rentACar.api.controllers;
 
 import java.util.List;
 
@@ -53,4 +53,4 @@ public class RentalDetailsController {
 		return this.rentalDetailsService.getAll();
 
 	}
-}
+}*/

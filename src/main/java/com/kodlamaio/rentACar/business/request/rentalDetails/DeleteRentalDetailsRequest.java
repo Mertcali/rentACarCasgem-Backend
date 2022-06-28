@@ -1,4 +1,4 @@
-package com.kodlamaio.rentACar.business.request.rentalDetails;
+/*package com.kodlamaio.rentACar.business.request.rentalDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,3 +11,4 @@ public class DeleteRentalDetailsRequest {
 
 	private int id;
 }
+*/

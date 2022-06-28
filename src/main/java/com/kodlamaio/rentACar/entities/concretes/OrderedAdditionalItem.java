@@ -40,7 +40,7 @@ public class OrderedAdditionalItem {
 	private AdditionalItem additionalItem;
 	
 	@OneToMany(mappedBy = "orderedAdditionalItem")
-	private List<RentalDetail> rentalDetails;
+	private List<Rental> rentals;
 	
 
 }
