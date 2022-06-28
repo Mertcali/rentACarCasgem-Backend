@@ -30,7 +30,7 @@ public class OrderedAdditionalItem {
 	private int id;
 	
 	@Column(name="total_days")
-	private int totalDays;
+	private int totalDaysAdditionalItem;
 	
 	@Column(name="total_price")
 	private double totalPrice;

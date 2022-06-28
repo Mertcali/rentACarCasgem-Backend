@@ -39,7 +39,7 @@ public class Rental {
 	private Date returnDate;
 
 	@Column(name = "total_days")
-	private int totalDays;
+	private int totalDaysRental;
 
 	@Column(name = "total_price")
 	private double totalPrice;

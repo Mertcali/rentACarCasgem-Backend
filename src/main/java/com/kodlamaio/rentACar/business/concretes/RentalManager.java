@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.kodlamaio.rentACar.business.abstracts.InvoiceService;
 import com.kodlamaio.rentACar.business.abstracts.RentalService;
 import com.kodlamaio.rentACar.business.request.invoices.CreateInvoiceRequest;
+import com.kodlamaio.rentACar.business.request.invoices.DeleteInvoiceRequest;
 import com.kodlamaio.rentACar.business.request.rental.CreateRentalRequest;
 import com.kodlamaio.rentACar.business.request.rental.DeleteRentalRequest;
 import com.kodlamaio.rentACar.business.request.rental.UpdateRentalRequest;
@@ -34,6 +35,7 @@ import com.kodlamaio.rentACar.dataAccess.abstracts.RentalRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.UserRepository;
 import com.kodlamaio.rentACar.entities.concretes.Car;
 import com.kodlamaio.rentACar.entities.concretes.Customer;
+import com.kodlamaio.rentACar.entities.concretes.Invoice;
 import com.kodlamaio.rentACar.entities.concretes.Rental;
 
 @Service
@@ -86,21 +88,17 @@ public class RentalManager implements RentalService {
 		Car carToRent = carRepository.findById(rentalToAdd.getCar().getId());
 		int orderedAdditionalItemIdInt = orderedAdditionalItemId;
 		rentalToAdd.setOrderedAdditionalItem(orderedAdditionalItemRepository.findById(orderedAdditionalItemIdInt));
-		rentalToAdd.setTotalDays(calculateTotalDay(createRentalRequest.getPickupDate(), createRentalRequest.getReturnDate()));
+		rentalToAdd.setTotalDaysRental(calculateTotalDay(createRentalRequest.getPickupDate(), createRentalRequest.getReturnDate()));
 		checkFindexScore(carToRent.getMinFindexScore(), customer.getFindexScore());	
-		
-		//KİRALANAN TARİH ARALIĞI KİRALANABİLME İÇİN KONTROL EDİLMELİ, EKLENECEK
-		//ARAÇ KİRALAMADAN SONRA FATURA OLUŞTURULMALI 
-		//--> Bunun yerine invoice'teki add direkt kullanılabilirmiş o yüzden addInvoice commentlendi
-		//ADDITIONAL EKLEMELERİ GELMELİ
-		
+			
 		if(orderedAdditionalItemId!=null) {		
 			checkCityStateAndAdditionalItemAndCalculatePrice(rentalToAdd,carToRent);		
 		}else {
 			checkCityStateAndCalculatePrice(rentalToAdd, carToRent);			
 		}
 		
-		//cleanCode'a biraz karşı bir integer yapısı ve kontrol şekli kullandım.Bunlar düzenlenmeli.
+		//cleanCode'a karşı bir integer yapısı ve kontrol şekli kullandım.Bunlar düzenlenmeli.
+		//IND VE CORP AYRILMALI
 		
 		carToRent.setState(1);
 		//STATE-0 Müsait
@@ -112,12 +110,6 @@ public class RentalManager implements RentalService {
 		//addInvoice(rentalToAdd);
 		
 		return new SuccessResult("RENTAL_ADDED_SUCCESSFULLY");
-
-		
-		
-		
-		
-
 
 	}
 
@@ -131,9 +123,15 @@ public class RentalManager implements RentalService {
 
 	@Override
 	public Result delete(DeleteRentalRequest deleteRentalRequest) {
-		Rental rental = this.modelMapperService.forRequest().map(deleteRentalRequest, Rental.class);
+		Rental rental = this.modelMapperService.forRequest().map(deleteRentalRequest, Rental.class);	
+		Rental rental2 = rentalRepository.findById(rental.getId());
+		System.out.println(rental2.getTotalDaysRental());
+		Car car = rental2.getCar();
+		deleteInvoiceForDeletingRental(rental2);
+		car.setState(0);
 		this.rentalRepository.delete(rental);
 		return new SuccessResult("RENTAL_DELETED");
+		
 	}
 
 	@Override
@@ -205,29 +203,36 @@ public class RentalManager implements RentalService {
 		} 
 	}
 	
-	private void addInvoice(Rental addedRental) {
+	/*private void addInvoice(Rental addedRental) {
 		Random random = new Random();
 		int sayi = random.nextInt(999999)+1000000;
 		String stringSayi = String.valueOf(sayi);
 		CreateInvoiceRequest createInvoiceRequest = new CreateInvoiceRequest(stringSayi,addedRental.getId());
 		invoiceService.add(createInvoiceRequest);
-	}
+	}*/
 	
 	private void checkCityStateAndCalculatePrice(Rental rentalToAdd, Car carToRent) {
 		if(rentalToAdd.getPickupCityId() != rentalToAdd.getReturnCityId()) {
-			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDays() * carToRent.getDailyPrice())+750);
+			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDaysRental() * carToRent.getDailyPrice())+750);
 		}else {
-			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDays() * carToRent.getDailyPrice()));
+			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDaysRental() * carToRent.getDailyPrice()));
 		}	
 	}
 	
 	private void checkCityStateAndAdditionalItemAndCalculatePrice(Rental rentalToAdd, Car carToRent) {
 		if(rentalToAdd.getPickupCityId() != rentalToAdd.getReturnCityId()) {
-			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDays() * carToRent.getDailyPrice())+ rentalToAdd.getOrderedAdditionalItem().getTotalPrice()+750);
+			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDaysRental() * carToRent.getDailyPrice())+ rentalToAdd.getOrderedAdditionalItem().getTotalPrice()+750);
 		}else {
-			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDays() * carToRent.getDailyPrice())+ rentalToAdd.getOrderedAdditionalItem().getTotalPrice());
+			rentalToAdd.setTotalPrice((rentalToAdd.getTotalDaysRental() * carToRent.getDailyPrice())+ rentalToAdd.getOrderedAdditionalItem().getTotalPrice());
 		}
 	}
+	
+	private void deleteInvoiceForDeletingRental(Rental rental) {
+		Invoice invoice = invoiceRepository.findByRentalId(rental.getId());	
+		DeleteInvoiceRequest deleteInvoiceRequest = new DeleteInvoiceRequest(invoice.getId());	
+		this.invoiceService.delete(deleteInvoiceRequest);
+	}
+	
 
 }
 	

@@ -1,9 +1,11 @@
 package com.kodlamaio.rentACar.business.concretes;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.kodlamaio.rentACar.business.abstracts.InvoiceService;
@@ -28,11 +30,10 @@ public class InvoiceManager implements InvoiceService{
 	
 	private InvoiceRepository invoiceRepository;
 	private ModelMapperService modelMapperService;
-
 	private RentalRepository rentalRepository;
 
 	@Autowired
-	public InvoiceManager(InvoiceRepository invoiceRepository, ModelMapperService modelMapperService,
+	public InvoiceManager( InvoiceRepository invoiceRepository, ModelMapperService modelMapperService,
 			RentalRepository rentalRepository) {
 		super();
 		this.invoiceRepository = invoiceRepository;
@@ -42,14 +43,19 @@ public class InvoiceManager implements InvoiceService{
 
 	@Override
 	public Result add(CreateInvoiceRequest createInvoiceRequest) {
+
 		checkIfInvoiceExistsByNumber(createInvoiceRequest.getInvoiceNumber());
 		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceRequest, Invoice.class);
 		//RentalDetail rentalDetail=this.rentalDetailRepository.findById(createInvoiceRequest.getRentalDetailId());
 		Rental rental = this.rentalRepository.findById(createInvoiceRequest.getRentalId());
+		invoice.setInvoiceNumber(createInvoiceNumber());
 		invoice.setRental(rental);
 		invoice.setState(1);
 	    //STATE-0 --> IPTAL EDILMIS FATURA
 		//STATE-1 --> AKTİF FATURA
+		
+		// IND VE CORP İÇİN AYRILMALI
+		System.out.println(rental.getId());
 		invoiceRepository.save(invoice);
 	    
 		return  new SuccessResult("INVOICE_ADDED");
@@ -97,6 +103,10 @@ public class InvoiceManager implements InvoiceService{
 		}
 	}
 
-
-
+	private String createInvoiceNumber() {
+		Random random = new Random();
+		int sayi = random.nextInt(999999)+1000000;
+		String stringSayi = String.valueOf(sayi);
+		return stringSayi;
+ }
 }

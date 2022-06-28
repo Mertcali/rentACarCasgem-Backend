@@ -2,6 +2,8 @@ package com.kodlamaio.rentACar.business.abstracts;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Lazy;
+
 import com.kodlamaio.rentACar.business.request.invoices.CreateInvoiceRequest;
 import com.kodlamaio.rentACar.business.request.invoices.DeleteInvoiceRequest;
 import com.kodlamaio.rentACar.business.request.invoices.UpdateInvoiceRequest;

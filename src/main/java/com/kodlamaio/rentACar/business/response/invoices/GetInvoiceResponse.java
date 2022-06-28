@@ -20,4 +20,5 @@ public class GetInvoiceResponse {
 	private int totalDays;
 	private int pickUpCityId;
 	private int returnCityId;
+	private int customerId;
 }

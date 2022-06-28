@@ -39,7 +39,7 @@ public class OrderedAdditionalItemManager implements OrderedAdditionalItemServic
 	public Result add(CreateOrderedAdditionalItemRequest createOrderedAdditionalItemRequest) {
 		OrderedAdditionalItem orderedAdditionalItem = this.modelMapperService.forRequest().map(createOrderedAdditionalItemRequest, OrderedAdditionalItem.class);
 		AdditionalItem additionalItem=this.additionalItemRepository.findById(createOrderedAdditionalItemRequest.getAdditionalItemId());
-		int days=orderedAdditionalItem.getTotalDays();
+		int days=orderedAdditionalItem.getTotalDaysAdditionalItem();
 		double totalPrice=additionalItem.getDailyPrice()*days;
 		orderedAdditionalItem.setTotalPrice(totalPrice);		
 		orderedAdditionalItem.setAdditionalItem(additionalItem);

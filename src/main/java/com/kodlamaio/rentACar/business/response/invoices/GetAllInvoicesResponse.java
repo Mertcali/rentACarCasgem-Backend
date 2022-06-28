@@ -16,7 +16,9 @@ public class GetAllInvoicesResponse {
 	private int state;
 	private Date pickupDate;
 	private Date returnDate;
-	private int totalDays;
+	private int totalDaysAdditionalItem;
+	private int totalDaysRental;
 	private int pickUpCityId;
 	private int returnCityId;
+	private int customerId;
 }
