@@ -14,4 +14,7 @@ public class GetCorporateCustomerResponse {
 	private int id;
 	private String taxNumber;
 	private int customerId;
+	private String customerNumber;
+	private Integer findexScore;
+	private String userEmail;
 }

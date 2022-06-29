@@ -20,6 +20,8 @@ public class GetAllRentalsResponse {
 	private double totalPrice;
 	private int carId;
 	private int customerId;
+	private int individualCustomerId;
+	private int corporateCustomerId;
 	private int orderedAdditionalItemId;
 	private int pickUpCityId;
 	private int returnCityId;

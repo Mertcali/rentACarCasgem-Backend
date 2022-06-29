@@ -1,6 +1,9 @@
 package com.kodlamaio.rentACar.entities.concretes;
 
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 import lombok.AllArgsConstructor;
@@ -15,4 +18,7 @@ import lombok.NoArgsConstructor;
 public class CorporateCustomer extends Customer {
 
 	private String taxNumber;
+	
+	@OneToMany(mappedBy="corporateCustomer")
+	private List<Rental> rentals;
 }

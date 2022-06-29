@@ -15,4 +15,8 @@ public class GetIndividualCustomerResponse {
 	private String firstName;
 	private String lastName;
 	private Integer birthYear;
+	private String userEmail;
+	private String nationalIdentity;
+	private String customerNumber;
+	private Integer findexScore;
 }

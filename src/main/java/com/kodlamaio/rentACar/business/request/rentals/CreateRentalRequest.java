@@ -22,6 +22,10 @@ public class CreateRentalRequest {
 	
 	private int customerId;
 	
+	private int individualCustomerId;
+	
+	private int corporateCustomerId;
+	
 	private int pickUpCityId;
 
 	private int returnCityId;

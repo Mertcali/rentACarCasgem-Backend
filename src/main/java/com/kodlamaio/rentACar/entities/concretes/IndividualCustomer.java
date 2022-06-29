@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -39,6 +40,9 @@ public class IndividualCustomer extends Customer{
 	
 	@Column(name ="birth_year")
 	private Integer birthYear;
+	
+	@OneToMany(mappedBy="individualCustomer")
+	private List<Rental> rentals;
 	
 	
 }

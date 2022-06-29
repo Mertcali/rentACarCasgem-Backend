@@ -69,6 +69,14 @@ public class Rental {
     private Customer customer;
     
     @ManyToOne
+    @JoinColumn(name = "individual_customer_id")
+    private IndividualCustomer individualCustomer;
+    
+    @ManyToOne
+    @JoinColumn(name = "corporate_customer_id")
+    private CorporateCustomer corporateCustomer;
+    
+    @ManyToOne
     @JoinColumn(name="city_id")
     private City city;
     

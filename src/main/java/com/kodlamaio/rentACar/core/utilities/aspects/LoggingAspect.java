@@ -72,15 +72,15 @@ public class LoggingAspect {
 	{ 
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("date: " + LocalDate.now());
-		stringBuilder.append("className: "+ joinPoint.getTarget().getClass().getSimpleName());
-		stringBuilder.append("methodName: "+ signature.getMethod().getName());
+		stringBuilder.append("{ date: " + LocalDate.now());
+		stringBuilder.append(" className: "+ joinPoint.getTarget().getClass().getSimpleName());
+		stringBuilder.append(" methodName: "+ signature.getMethod().getName());
 		denemelik.add(stringBuilder);
 		if(signature.getMethod().getName()!= "getAll") {
-			stringBuilder.append("parameters:" + joinPoint.getArgs()[0]);
+			stringBuilder.append(" parameters: " + joinPoint.getArgs()[0] + " }");
 			denemelik.add(stringBuilder);
 		}else {
-			stringBuilder.append("parameters:" + "null");
+			stringBuilder.append(" parameters: " + "null }");
 			denemelik.add(stringBuilder);
 		}
 		try {
