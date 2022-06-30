@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -84,7 +85,7 @@ public class Rental {
 	@JoinColumn(name = "ordered_additional_item_id")
 	private OrderedAdditionalItem orderedAdditionalItem;
 	
-	@OneToMany(mappedBy = "rental")
+	@OneToMany(mappedBy = "rental") //, cascade = CascadeType.REMOVE --> içerdeki sistemi yapmak yerine sadece bu kullanılabilir
 	private List<Invoice> invoices;
     
     

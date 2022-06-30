@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 //@JsonIgnoreProperties({"hibernateLazyInitializer","handler","cars"})
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "brands")
 public class Brand {
 	@Id()

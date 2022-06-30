@@ -14,6 +14,8 @@ import com.kodlamaio.rentACar.entities.concretes.Brand;
 public interface BrandService {
 	// Response request pattern
 	Result add(CreateBrandRequest createBrandRequest);
+	
+	Result addWithBuilder(CreateBrandRequest createBrandRequest);
 
 	Result update(UpdateBrandRequest updateBrandRequest);
 

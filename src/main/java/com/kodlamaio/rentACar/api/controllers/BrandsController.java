@@ -32,11 +32,17 @@ public class BrandsController {
 	public Result add(@RequestBody CreateBrandRequest createBrandRequest) {
 		return this.brandService.add(createBrandRequest);
 	}
+	
+	@PostMapping("/addWithBuilder")
+	public Result addWithBuilder(@RequestBody CreateBrandRequest createBrandRequest) {
+		return this.brandService.addWithBuilder(createBrandRequest);
+	}
 
 	@GetMapping("/getbyid")
 	public DataResult<GetBrandResponse> getById(@RequestBody GetBrandResponse getBrandResponse) {
 		return brandService.getById(getBrandResponse);		
 	}
+	
 
 	@PostMapping("/update")
 	public Result update(@RequestBody UpdateBrandRequest updateBrandRequest) {

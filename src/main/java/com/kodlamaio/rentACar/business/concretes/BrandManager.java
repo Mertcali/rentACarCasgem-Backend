@@ -46,6 +46,14 @@ public class BrandManager implements BrandService {
 		return new SuccessResult("BRAND_ADDED");
 
 	}
+	
+	@Override
+	public Result addWithBuilder(CreateBrandRequest createBrandRequest) {
+		Brand brand = Brand.builder().name(createBrandRequest.getName()).build();
+		this.brandRepository.save(brand);
+		return new SuccessResult("BRAND_ADDED_WITH_LOMBOK");
+	}
+
 
 	@Override
 	public Result update(UpdateBrandRequest updateBrandRequest) {
@@ -90,6 +98,7 @@ public class BrandManager implements BrandService {
 			throw new BusinessException("BRAND_EXISTS");
 		}
 	}
+
 
 
 	

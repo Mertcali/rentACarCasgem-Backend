@@ -25,45 +25,9 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-
-
 @Aspect
 @Component
 public class LoggingAspect {
-	
-/*	@Pointcut("execution(* com.kodlamaio.rentACar.business.concretes.*.*(..))")
-	public void myPointcut() {
-
-	}
-
-	@Around("myPointcut()")
-	public void applicationLogger(ProceedingJoinPoint pjp) throws Throwable {
-		ObjectMapper mapper = new ObjectMapper();
-		String methodName = pjp.getSignature().getName();
-		String className = pjp.getTarget().getClass().getSimpleName().toString();
-		Object[] array = pjp.getArgs(); 
-//		log.info("date:" + LocalDate.now().getYear() + "\n" + "className " + className + "\n" + " : " + methodName
-//				+ "()" + "arguments : " + mapper.writeValueAsString(array));
-		Object object = pjp.proceed();
-//		log.info(className + " : " + methodName + "()" + "Response : " + mapper.writeValueAsString(object));
-		File file = new File("C:\\Logs\\deneme4.json");
-		try (BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(file, true))) {
-			bufferWriter.write("\"date\":" + LocalDate.now().getYear());
-			bufferWriter.newLine();
-			bufferWriter.write("\"className\":" + className);
-			bufferWriter.newLine();
-			bufferWriter.write("\"methodName\":" + methodName);
-			bufferWriter.newLine();
-			bufferWriter.write("\"parameters\":" + mapper.writeValueAsString(array));
-			bufferWriter.newLine();
-		} catch (IOException e) {
-			System.out.println("Unable to read file " + file.toString());
-		}
-
-	}
-*/
-	
-	
 	ArrayList<StringBuilder> denemelik = new ArrayList<StringBuilder>();
 	//Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(getClass(), denemelik).create();
 
@@ -103,6 +67,39 @@ public class LoggingAspect {
 	}
 	
 }
+/*	@Pointcut("execution(* com.kodlamaio.rentACar.business.concretes.*.*(..))")
+	public void myPointcut() {
+
+	}
+
+	@Around("myPointcut()")
+	public void applicationLogger(ProceedingJoinPoint pjp) throws Throwable {
+		ObjectMapper mapper = new ObjectMapper();
+		String methodName = pjp.getSignature().getName();
+		String className = pjp.getTarget().getClass().getSimpleName().toString();
+		Object[] array = pjp.getArgs(); 
+//		log.info("date:" + LocalDate.now().getYear() + "\n" + "className " + className + "\n" + " : " + methodName
+//				+ "()" + "arguments : " + mapper.writeValueAsString(array));
+		Object object = pjp.proceed();
+//		log.info(className + " : " + methodName + "()" + "Response : " + mapper.writeValueAsString(object));
+		File file = new File("C:\\Logs\\deneme4.json");
+		try (BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(file, true))) {
+			bufferWriter.write("\"date\":" + LocalDate.now().getYear());
+			bufferWriter.newLine();
+			bufferWriter.write("\"className\":" + className);
+			bufferWriter.newLine();
+			bufferWriter.write("\"methodName\":" + methodName);
+			bufferWriter.newLine();
+			bufferWriter.write("\"parameters\":" + mapper.writeValueAsString(array));
+			bufferWriter.newLine();
+		} catch (IOException e) {
+			System.out.println("Unable to read file " + file.toString());
+		}
+
+	}
+*/
+	
+
 
 
 /*
