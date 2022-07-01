@@ -65,6 +65,13 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
+	public Result updateWithBuilder(UpdateBrandRequest updateBrandRequest) {
+		Brand brand = Brand.builder().id(updateBrandRequest.getId())
+				.name(updateBrandRequest.getName()).build();
+		this.brandRepository.save(brand);
+		return new SuccessResult("BRAND_UPDATED_WITH_LOMBOK");
+	}
+	@Override
 	public Result delete(DeleteBrandRequest deleteBrandRequest) {
 
 		Brand brand = this.modelMapperService.forRequest().map(deleteBrandRequest, Brand.class);
@@ -73,12 +80,28 @@ public class BrandManager implements BrandService {
 		return new SuccessResult("BRAND_DELETED");
 
 	}
+	
+	@Override
+	public Result deleteWithBuilder(DeleteBrandRequest deleteBrandRequest) {
+		Brand brand = Brand.builder().id(deleteBrandRequest.getId()).build();
+		this.brandRepository.delete(brand);
+		return new SuccessResult("BRAND_DELETED_WITH_LOMBOK");
+	}
 
 	@Override
 	public DataResult<GetBrandResponse> getById(GetBrandResponse getBrandResponse) {
 		Brand brand = this.brandRepository.findById(getBrandResponse.getId());
 		GetBrandResponse response = this.modelMapperService.forResponse().map(brand,GetBrandResponse.class);
 		return new SuccessDataResult<GetBrandResponse>(response,"BRAND_LISTED");
+	}
+	
+	@Override
+	public DataResult<GetBrandResponse> getByIdWithBuilder(GetBrandResponse getBrandResponse) {
+		Brand brand = this.brandRepository.findById(getBrandResponse.getId());
+		GetBrandResponse response = GetBrandResponse.builder()
+				.id(brand.getId())
+				.name(brand.getName()).build();
+		return new SuccessDataResult<GetBrandResponse>(response,"BRAND_LISTED_WITH_LOMBOK");
 	}
 
 	@Override
@@ -92,12 +115,27 @@ public class BrandManager implements BrandService {
 		return new SuccessDataResult<List<GetAllBrandsResponse>>(response,"ALL_BRANDS_LISTED");
 	}
 
+	@Override
+	public DataResult<List<GetAllBrandsResponse>> getAllWithBuilder() {
+		List<Brand> brands = this.brandRepository.findAll();
+	//eksik
+		return new DataResult<List<GetAllBrandsResponse>>(null, false);
+	}
+	
 	private void checkIfBrandExistsByName(String name) {
 		Brand currentBrand = brandRepository.findByName(name);
 		if(currentBrand!=null) {
 			throw new BusinessException("BRAND_EXISTS");
 		}
 	}
+
+
+
+
+
+
+
+
 
 
 

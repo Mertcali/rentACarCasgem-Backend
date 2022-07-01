@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.results.ErrorDataResult;
 
-@RestControllerAdvice
+@RestControllerAdvice //exception handling'in devreye girmesi için
 @SpringBootApplication
 public class RentACarApplication {
 //kendi beanini kendin yapcaksın

@@ -18,12 +18,20 @@ public interface BrandService {
 	Result addWithBuilder(CreateBrandRequest createBrandRequest);
 
 	Result update(UpdateBrandRequest updateBrandRequest);
+	
+	Result updateWithBuilder(UpdateBrandRequest updateBrandRequest);
 
 	Result delete(DeleteBrandRequest deleteBrandRequest);
 	
+	Result deleteWithBuilder(DeleteBrandRequest deleteBrandRequest);
+	
 	DataResult<GetBrandResponse> getById(GetBrandResponse getBrandResponse);
+	
+	DataResult<GetBrandResponse> getByIdWithBuilder(GetBrandResponse getBrandResponse);
 
 	DataResult<List<GetAllBrandsResponse>> getAll();
+	
+	DataResult<List<GetAllBrandsResponse>> getAllWithBuilder();
 	
 
 }

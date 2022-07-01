@@ -38,25 +38,46 @@ public class BrandsController {
 		return this.brandService.addWithBuilder(createBrandRequest);
 	}
 
+	
 	@GetMapping("/getbyid")
 	public DataResult<GetBrandResponse> getById(@RequestBody GetBrandResponse getBrandResponse) {
 		return brandService.getById(getBrandResponse);		
 	}
 	
+	@GetMapping("/getbyidwithbuilder")
+	public DataResult<GetBrandResponse> getByIdWithBuilder(@RequestBody GetBrandResponse getBrandResponse) {
+		return brandService.getByIdWithBuilder(getBrandResponse);		
+	}
 
 	@PostMapping("/update")
 	public Result update(@RequestBody UpdateBrandRequest updateBrandRequest) {
 		return this.brandService.update(updateBrandRequest);
 	}
+	
+	@PostMapping("/updatewithbuilder")
+	public Result updateWithBuilder(@RequestBody UpdateBrandRequest updateBrandRequest) {
+		return this.brandService.updateWithBuilder(updateBrandRequest);
+	}
+	
 
 	@PostMapping("/delete")
 	public Result delete(@RequestBody DeleteBrandRequest deleteBrandRequest) {
 		return this.brandService.delete(deleteBrandRequest);
 	}
 	
+	@PostMapping("/deletewithbuilder")
+	public Result deleteWithBuilder(@RequestBody DeleteBrandRequest deleteBrandRequest) {
+		return this.brandService.deleteWithBuilder(deleteBrandRequest);
+	}
 
 	@GetMapping("/getall")
 	public DataResult<List<GetAllBrandsResponse>> getAll() {
 		return this.brandService.getAll();
 	}
+	
+	@GetMapping("/getallwithbuilder")
+	public DataResult<List<GetAllBrandsResponse>> getAllWithBuilder() {
+		return this.brandService.getAllWithBuilder();
+	}
+	
 }
