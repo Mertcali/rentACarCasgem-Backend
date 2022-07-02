@@ -3,10 +3,12 @@ package com.kodlamaio.rentACar.api.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +23,7 @@ import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.entities.concretes.Brand;
 
 @RestController
-@RequestMapping("/api/brands")
+@RequestMapping("/api/brands" )
 public class BrandsController {
 
 	@Autowired
@@ -80,4 +82,9 @@ public class BrandsController {
 		return this.brandService.getAllWithBuilder();
 	}
 	
+	@RequestMapping(path = "/getAll",method = RequestMethod.GET,
+			produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
+	public DataResult<List<GetAllBrandsResponse>> getAll2() {
+		return this.brandService.getAll();
+	}
 }

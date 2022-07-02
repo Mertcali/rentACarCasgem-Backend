@@ -117,8 +117,8 @@ public class BrandManager implements BrandService {
 
 	@Override
 	public DataResult<List<GetAllBrandsResponse>> getAllWithBuilder() {
-		List<Brand> brands = this.brandRepository.findAll();
-	//eksik
+		List<Brand> brands =this.brandRepository.findAll();
+	//
 		return new DataResult<List<GetAllBrandsResponse>>(null, false);
 	}
 	
