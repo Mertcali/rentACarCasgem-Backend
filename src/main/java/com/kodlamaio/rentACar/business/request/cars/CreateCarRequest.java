@@ -1,11 +1,7 @@
 package com.kodlamaio.rentACar.business.request.cars;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-
-import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
